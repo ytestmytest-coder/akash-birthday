@@ -154,7 +154,10 @@ main section{
   position: relative;
   z-index: 5;
   text-align: center;
-  padding-top: clamp(3rem, 9vh, 6rem);
+  /* min side of the clamp must clear the curtain-valance bar (60px + 4px
+     border + 6px marquee light ≈ 70px) with room to spare, so the eyebrow
+     text never sits behind/under it on short or landscape viewports */
+  padding-top: clamp(5.6rem, 9vh, 6.5rem);
   color: var(--cream);
 }
 .stage-eyebrow{
@@ -417,7 +420,7 @@ body.stage-active{ overflow: hidden; height: 100vh; }
   transform: translateX(-40vw);
 }
 #bike-layer.bike-riding{
-  animation: bike-drive 2.6s cubic-bezier(.4,0,.3,1) forwards;
+  animation: bike-drive 4.2s cubic-bezier(.45,0,.4,1) forwards;
 }
 @keyframes bike-drive{
   0%{ opacity: 0; transform: translateX(-40vw) translateY(0); }
@@ -429,7 +432,7 @@ body.stage-active{ overflow: hidden; height: 100vh; }
 #bike-svg{ width: 100%; height: auto; overflow: visible; }
 .bike-shadow{ fill: rgba(0,0,0,.3); }
 .bike-wheel{ transform-box: fill-box; transform-origin: center; }
-#bike-layer.bike-riding .bike-wheel{ animation: bike-wheel-spin .22s linear infinite; }
+#bike-layer.bike-riding .bike-wheel{ animation: bike-wheel-spin .34s linear infinite; }
 @keyframes bike-wheel-spin{ to{ transform: rotate(360deg); } }
 .bike-speedlines line{
   stroke: rgba(251,243,230,.4);
@@ -700,7 +703,9 @@ footer{
 @media (max-width: 640px){
   /* stage / balloon game */
   .stage-copy{
-    padding-top: calc(env(safe-area-inset-top, 0px) + 2.4rem);
+    /* mobile valance is 46px + 4px border + 6px marquee ≈ 56px tall —
+       pad past that with room to spare so the eyebrow text never collides */
+    padding-top: calc(env(safe-area-inset-top, 0px) + 4.4rem);
     padding-left: 1rem;
     padding-right: 1rem;
   }
