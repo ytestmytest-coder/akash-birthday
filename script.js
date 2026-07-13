@@ -419,11 +419,11 @@
   function openCurtain(){
     stage.classList.add("stage-open");
     burstConfetti(50, 60);
-    playHappyBirthdayTune();
     track("curtain_opened", {});
     setTimeout(function(){
       stage.classList.add("stage-removed");
       document.body.classList.remove("stage-active");
+      playHappyBirthdayTune();
       setTimeout(rideBike, 250);
     }, 1150);
   }
