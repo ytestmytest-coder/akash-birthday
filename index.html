@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Birthday, Akash! 🎉</title>
+<meta name="description" content="A birthday celebration website for Akash — 21st July" />
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="style.css" />
+
+<!-- ============================================================
+     GOOGLE ANALYTICS 4
+     Replace G-XXXXXXXXXX below with your real GA4 Measurement ID
+     (find it in GA4 Admin > Data Streams > your stream).
+     See README.txt for step-by-step instructions.
+     ============================================================ -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+</head>
+<body>
+
+<!-- ambient confetti layer, sits above everything but ignores clicks -->
+<div id="confetti-layer" aria-hidden="true"></div>
+
+<!-- ============ CURTAIN / BALLOON-POP GAME ============ -->
+<section id="stage" aria-label="Pop the balloons to reveal Akash's birthday page">
+  <div class="stage-sky"></div>
+
+  <div class="stage-copy">
+    <p class="stage-eyebrow">Something's waiting behind the curtain…</p>
+    <h1 class="stage-title">Pop every balloon<br/>to raise the curtain 🎈</h1>
+    <p class="stage-progress"><span id="pop-count">0</span> / <span id="pop-total">6</span> popped</p>
+  </div>
+
+  <div id="balloon-field"></div>
+
+  <div class="curtain curtain-left"><div class="curtain-fold"></div></div>
+  <div class="curtain curtain-right"><div class="curtain-fold"></div></div>
+  <div class="curtain-valance"></div>
+  <div class="spotlight"></div>
+</section>
+
+<!-- ============ MAIN SITE ============ -->
+<main id="main-content">
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="eyebrow">21st July</p>
+      <h1 class="hero-title">Happy Birthday,<br /><span class="highlight">Akash!</span></h1>
+      <p class="hero-sub">Another trip around the sun for someone worth celebrating all year round.</p>
+
+      <div class="curve-lights-mount" id="hero-curve-lights" aria-hidden="true"></div>
+
+      <div id="hero-highlight-wrap">
+        <p id="hero-highlight" class="hero-highlight"></p>
+      </div>
+
+      <a href="#gallery" class="scroll-cta">See the celebration <span aria-hidden="true">↓</span></a>
+    </div>
+  </section>
+
+  <!-- BULLET BIKE — rides across the screen once the curtain opens -->
+  <div id="bike-layer" aria-hidden="true">
+    <svg id="bike-svg" viewBox="0 0 220 110" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="110" cy="98" rx="95" ry="6" class="bike-shadow"/>
+      <g class="bike-speedlines">
+        <line x1="-10" y1="55" x2="20" y2="55"/>
+        <line x1="-16" y1="68" x2="14" y2="68"/>
+        <line x1="-6" y1="80" x2="24" y2="80"/>
+      </g>
+      <g class="bike-body">
+        <!-- exhaust -->
+        <path d="M10 80 L40 74 L42 82 L14 88 Z" fill="#3a2a1a"/>
+        <!-- rear wheel -->
+        <g class="bike-wheel" transform="translate(48,80)">
+          <circle r="20" fill="#1b1330" stroke="#F4B740" stroke-width="3"/>
+          <circle r="6" fill="#F4B740"/>
+          <line x1="0" y1="-18" x2="0" y2="18" stroke="#F4B740" stroke-width="1.4"/>
+          <line x1="-18" y1="0" x2="18" y2="0" stroke="#F4B740" stroke-width="1.4"/>
+          <line x1="-13" y1="-13" x2="13" y2="13" stroke="#F4B740" stroke-width="1.4"/>
+          <line x1="-13" y1="13" x2="13" y2="-13" stroke="#F4B740" stroke-width="1.4"/>
+        </g>
+        <!-- front wheel -->
+        <g class="bike-wheel" transform="translate(168,80)">
+          <circle r="20" fill="#1b1330" stroke="#F4B740" stroke-width="3"/>
+          <circle r="6" fill="#F4B740"/>
+          <line x1="0" y1="-18" x2="0" y2="18" stroke="#F4B740" stroke-width="1.4"/>
+          <line x1="-18" y1="0" x2="18" y2="0" stroke="#F4B740" stroke-width="1.4"/>
+          <line x1="-13" y1="-13" x2="13" y2="13" stroke="#F4B740" stroke-width="1.4"/>
+          <line x1="-13" y1="13" x2="13" y2="-13" stroke="#F4B740" stroke-width="1.4"/>
+        </g>
+        <!-- fork -->
+        <path d="M138 46 L168 80" stroke="#C99530" stroke-width="6" stroke-linecap="round"/>
+        <!-- main frame -->
+        <path d="M48 80 L78 50 L120 50 L138 46 L120 34 L86 34 L60 46 L48 80 Z" fill="#FF6F91"/>
+        <path d="M78 50 L100 50 L96 62 L74 62 Z" fill="#C22A54"/>
+        <!-- fuel tank -->
+        <ellipse cx="98" cy="42" rx="24" ry="12" fill="#F4B740"/>
+        <ellipse cx="98" cy="39" rx="18" ry="6" fill="#FBE7B0" opacity=".6"/>
+        <!-- seat -->
+        <path d="M60 46 Q40 42 34 50 Q40 56 62 54 Z" fill="#241A57"/>
+        <!-- headlight -->
+        <circle cx="150" cy="52" r="7" fill="#FBF3E6"/>
+        <!-- handlebar + rider silhouette -->
+        <path d="M132 34 L124 20" stroke="#241A57" stroke-width="4" stroke-linecap="round"/>
+        <path d="M96 34 Q92 8 78 -2 Q90 12 92 34 Z" fill="#130C30"/>
+        <circle cx="80" cy="-4" r="9" fill="#130C30"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <p class="section-eyebrow">01 — The Album</p>
+    <h2>Moments with Akash</h2>
+    <p class="section-sub">Tap a photo to look closer.</p>
+
+    <div class="curve-lights-mount curve-lights-wide" id="gallery-curve-lights" aria-hidden="true"></div>
+    <div id="gallery-grid" class="gallery-grid"></div>
+  </section>
+
+  <!-- CAKE / CANDLES -->
+  <section id="cake-section">
+    <p class="section-eyebrow">02 — Make A Wish</p>
+    <h2>Light every candle</h2>
+    <p class="section-sub">Click each flame to light it. Light them all to reveal a wish for Akash.</p>
+
+    <div id="cake-scene"></div>
+  </section>
+
+  <!-- WISH REVEAL (hidden until candles are all lit) -->
+  <section id="wish-reveal" class="hidden-reveal">
+    <div class="wish-card">
+      <span class="wish-card-icon">🎂</span>
+      <p class="wish-text">
+        Akash, here's to another year of the laughter you bring, the chaos you cause,
+        and the people you keep close without even trying. May this year hand you
+        exactly what you're chasing — and a few good surprises you didn't see coming.
+      </p>
+      <p class="wish-signoff">Happy Birthday!</p>
+    </div>
+  </section>
+
+  <!-- MESSAGES -->
+  <section id="messages">
+    <p class="section-eyebrow">03 — For You</p>
+    <h2>Messages for Akash</h2>
+    <p class="section-sub">A few words from the people who love celebrating you.</p>
+
+    <div class="curve-lights-mount" id="messages-curve-lights" aria-hidden="true"></div>
+
+    <div id="message-list" class="message-list"></div>
+  </section>
+
+  <footer>
+    <p>Made with 🎂 for Akash — 21st July</p>
+  </footer>
+</main>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button id="lightbox-close" aria-label="Close">&times;</button>
+  <button id="lightbox-prev" aria-label="Previous photo">&#8249;</button>
+  <img id="lightbox-img" src="" alt="" />
+  <button id="lightbox-next" aria-label="Next photo">&#8250;</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
