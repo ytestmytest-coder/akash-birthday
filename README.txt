@@ -14,17 +14,20 @@ Just double-click index.html and it opens in your browser. Everything
 works offline except the Google Fonts and the Google Analytics script
 (those need internet).
 
-STEP 1 — ADD AKASH'S REAL PHOTOS
+STEP 1 — PHOTOS
 -----------------------------------
-Inside the "images" folder, replace photo1.jpg through photo6.jpg with
-Akash's real photos. Keep the exact same file names (photo1.jpg,
-photo2.jpg, etc.) and it'll just work — no code changes needed.
-Square-ish, well-lit photos look best since they're cropped to squares
-in the gallery.
+The "images" folder already has Akash's real photos in it (photo1.jpg
+through photo5.jpg) — nothing to do here unless you want to swap one
+out. To replace a photo, just overwrite the file, keeping the exact
+same file name (photo1.jpg, photo2.jpg, etc.) and it'll just work —
+no code changes needed. Square-ish, well-lit photos look best since
+they're cropped to squares in the gallery.
 
-If you want to change the caption under each photo, open script.js and
-edit the PHOTOS list near the top (around line 17) — each line has a
-"caption" you can rewrite.
+If you want to change the caption under each photo, or add a 6th
+photo, open script.js and edit the PHOTOS list near the top (around
+line 17) — each entry has a "caption" you can rewrite, and you can
+add a new { src: "images/photo6.jpg", caption: "..." } line (after
+adding that file to the images folder).
 
 STEP 2 — CONNECT GOOGLE ANALYTICS 4
 --------------------------------------

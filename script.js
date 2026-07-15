@@ -16,12 +16,11 @@
 
   // Edit captions here. Filenames map to /images/photoN.jpg
   var PHOTOS = [
-    { src: "images/photo1.jpg", caption: "That smile, always" },
-    { src: "images/photo2.jpg", caption: "Good times, better company" },
-    { src: "images/photo3.jpg", caption: "Main character energy" },
-    { src: "images/photo4.jpg", caption: "One for the memories" },
-    { src: "images/photo5.jpg", caption: "Just another great day" },
-    { src: "images/photo6.jpg", caption: "Here's to more of these" }
+    { src: "images/photo1.jpg", caption: "Golden hour, better company" },
+    { src: "images/photo2.jpg", caption: "Chasing waterfalls together" },
+    { src: "images/photo3.jpg", caption: "Coffee, pistachios, peace signs" },
+    { src: "images/photo4.jpg", caption: "Self-care Sunday, mask and all" },
+    { src: "images/photo5.jpg", caption: "Close-ups with my favorite person" }
   ];
 
   var BALLOON_COUNT = 6;
@@ -534,6 +533,27 @@
   rotateHeroHighlight();
 
   /* ---------------------------------------------------------
+     4c. SCROLL INDICATOR — fades once the person starts scrolling,
+     so it doesn't linger over the rest of the page
+  --------------------------------------------------------- */
+  var scrollIndicator = document.getElementById("scroll-indicator");
+  if (scrollIndicator){
+    var heroEl = document.getElementById("hero");
+    if (typeof IntersectionObserver !== "undefined" && heroEl){
+      var heroObserver = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          scrollIndicator.classList.toggle("is-hidden", entry.intersectionRatio < 0.6);
+        });
+      }, { threshold: [0, 0.6] });
+      heroObserver.observe(heroEl);
+    } else {
+      window.addEventListener("scroll", function(){
+        scrollIndicator.classList.toggle("is-hidden", window.scrollY > 80);
+      }, { passive: true });
+    }
+  }
+
+  /* ---------------------------------------------------------
      5. GALLERY + LIGHTBOX
   --------------------------------------------------------- */
   var galleryGrid = document.getElementById("gallery-grid");
@@ -543,7 +563,8 @@
 
   PHOTOS.forEach(function(photo, i){
     var card = document.createElement("figure");
-    card.className = "photo-card";
+    card.className = "photo-card reveal-up";
+    card.style.transitionDelay = prefersReducedMotion ? "0s" : (i % 3) * 0.08 + "s";
     card.innerHTML =
       '<img src="' + photo.src + '" alt="' + photo.caption.replace(/"/g, "&quot;") + '" loading="lazy"/>' +
       '<figcaption>' + photo.caption + '</figcaption>';
@@ -676,9 +697,10 @@
   function renderMessages(){
     if (!messageList) return;
     messageList.innerHTML = "";
-    MESSAGES.forEach(function(m){
+    MESSAGES.forEach(function(m, i){
       var item = document.createElement("div");
-      item.className = "message-item";
+      item.className = "message-item reveal-up";
+      item.style.transitionDelay = prefersReducedMotion ? "0s" : (i % 2) * 0.1 + "s";
       item.innerHTML =
         '<span class="message-item-name">' + escapeHTML(m.name) + '</span>' +
         '<p class="message-item-msg">' + escapeHTML(m.message) + '</p>';
@@ -687,5 +709,31 @@
   }
 
   renderMessages();
+
+  /* ---------------------------------------------------------
+     8. SCROLL REVEAL — fades/rises .reveal-up elements in as
+     they enter the viewport (section headers, gallery cards,
+     message cards). Falls back to showing everything instantly
+     if IntersectionObserver isn't available or motion is reduced.
+  --------------------------------------------------------- */
+  (function initScrollReveal(){
+    var revealEls = document.querySelectorAll(".reveal-up");
+
+    if (prefersReducedMotion || typeof IntersectionObserver === "undefined"){
+      revealEls.forEach(function(el){ el.classList.add("in-view"); });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          entry.target.classList.add("in-view");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+
+    revealEls.forEach(function(el){ observer.observe(el); });
+  })();
 
 })();

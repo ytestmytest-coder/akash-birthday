@@ -93,6 +93,20 @@ main section{
 }
 
 /* =========================================================
+   SCROLL REVEAL — generic fade/rise-in, toggled by JS
+   via IntersectionObserver as elements enter the viewport
+========================================================= */
+.reveal-up{
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal-up.in-view{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================================
    AMBIENT CONFETTI LAYER (used for reveal bursts)
 ========================================================= */
 #confetti-layer{
@@ -361,6 +375,35 @@ body.stage-active{ overflow: hidden; height: 100vh; }
   background: radial-gradient(60% 45% at 50% 30%, rgba(244,183,64,.15), transparent 70%);
   pointer-events: none;
 }
+
+/* soft, slow-drifting color blobs — gives the hero a living, modern backdrop
+   without competing with the headline */
+.hero-aurora{
+  position: absolute;
+  inset: -10% -10%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-aurora span{
+  position: absolute;
+  width: 42vw;
+  height: 42vw;
+  max-width: 480px;
+  max-height: 480px;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: .28;
+  animation: aurora-drift 20s ease-in-out infinite;
+}
+.hero-aurora span:nth-child(1){ background: var(--coral); top: -8%;  left: -6%;  }
+.hero-aurora span:nth-child(2){ background: var(--gold);  top: 18%; right: -8%; animation-duration: 24s; animation-delay: -6s; }
+.hero-aurora span:nth-child(3){ background: var(--mint);  bottom: -14%; left: 22%; animation-duration: 26s; animation-delay: -13s; }
+@keyframes aurora-drift{
+  0%, 100%{ transform: translate(0,0) scale(1); }
+  33%{ transform: translate(4%, 5%) scale(1.08); }
+  66%{ transform: translate(-5%, -3%) scale(.95); }
+}
+
 .hero-content{ position: relative; z-index: 2; max-width: 720px; }
 .eyebrow{
   font-size: .85rem;
@@ -376,8 +419,17 @@ body.stage-active{ overflow: hidden; height: 100vh; }
   color: var(--cream);
 }
 .hero-title .highlight{
-  color: var(--gold);
   position: relative;
+  background: linear-gradient(90deg, var(--gold), var(--coral), var(--mint), var(--gold));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: highlight-shimmer 7s ease-in-out infinite;
+}
+@keyframes highlight-shimmer{
+  0%, 100%{ background-position: 0% 50%; }
+  50%{ background-position: 100% 50%; }
 }
 .hero-sub{
   margin: 1.4rem auto 0;
@@ -431,9 +483,30 @@ body.stage-active{ overflow: hidden; height: 100vh; }
 }
 #bike-svg{ width: 100%; height: auto; overflow: visible; }
 .bike-shadow{ fill: rgba(0,0,0,.3); }
+
+/* transform-box: fill-box centers rotation on each wheel's own geometry, but a CSS
+   animated `transform` fully replaces the SVG `transform="translate(...)"` attribute
+   that positions the wheel — without re-stating the translate inside the keyframes,
+   a spinning wheel snaps away from its axle. --wx/--wy (set inline per wheel) keep
+   the position explicit at every frame, so both wheels spin exactly in place and
+   stay perfectly aligned with the frame/fork. */
 .bike-wheel{ transform-box: fill-box; transform-origin: center; }
 #bike-layer.bike-riding .bike-wheel{ animation: bike-wheel-spin .34s linear infinite; }
-@keyframes bike-wheel-spin{ to{ transform: rotate(360deg); } }
+@keyframes bike-wheel-spin{
+  from{ transform: translate(var(--wx), var(--wy)) rotate(0deg); }
+  to{   transform: translate(var(--wx), var(--wy)) rotate(360deg); }
+}
+
+.bike-trail path{ opacity: 0; }
+#bike-layer.bike-riding .bike-trail path{ animation: bike-trail-fade .5s ease-out infinite; }
+.bike-trail path:nth-child(2){ animation-delay: .08s !important; }
+.bike-trail path:nth-child(3){ animation-delay: .16s !important; }
+@keyframes bike-trail-fade{
+  0%{ opacity: 0; transform: translateX(6px); }
+  35%{ opacity: .9; }
+  100%{ opacity: 0; transform: translateX(-16px); }
+}
+
 .bike-speedlines line{
   stroke: rgba(251,243,230,.4);
   stroke-width: 3;
@@ -488,6 +561,55 @@ body.stage-active{ overflow: hidden; height: 100vh; }
 }
 .scroll-cta:hover{ transform: translateY(-3px); box-shadow: 0 14px 30px rgba(244,183,64,.35); }
 
+/* nudge that there's more to see below the fold — docked to the
+   bottom of the hero, fades out once the person starts scrolling */
+.scroll-indicator{
+  position: absolute;
+  left: 50%;
+  bottom: 2.2rem;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  pointer-events: none;
+  opacity: .85;
+  transition: opacity .4s ease;
+}
+.scroll-indicator.is-hidden{ opacity: 0; }
+.scroll-indicator-mouse{
+  width: 24px;
+  height: 38px;
+  border: 2px solid var(--cream-dim);
+  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+  box-sizing: border-box;
+}
+.scroll-indicator-dot{
+  width: 4px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--gold);
+  animation: scroll-dot-fall 1.7s ease-in-out infinite;
+}
+@keyframes scroll-dot-fall{
+  0%{ transform: translateY(0); opacity: 1; }
+  75%{ opacity: 1; }
+  100%{ transform: translateY(12px); opacity: 0; }
+}
+.scroll-indicator-label{
+  font-size: .68rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--cream-faint);
+}
+@media (max-width: 640px){
+  .scroll-indicator{ bottom: 1.3rem; }
+}
+
 /* =========================================================
    GALLERY
 ========================================================= */
@@ -507,33 +629,40 @@ body.stage-active{ overflow: hidden; height: 100vh; }
 }
 
 .photo-card{
-  background: var(--cream);
-  padding: .8rem .8rem 1.4rem;
-  border-radius: 6px;
-  box-shadow: 0 14px 30px rgba(0,0,0,.35);
+  position: relative;
+  background: linear-gradient(160deg, rgba(251,243,230,.08), rgba(251,243,230,.02));
+  border: 1px solid rgba(251,243,230,.14);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  overflow: hidden;
   cursor: pointer;
-  transform: rotate(var(--tilt, -2deg));
-  transition: transform .3s ease, box-shadow .3s ease;
+  box-shadow: 0 14px 32px rgba(0,0,0,.35);
+  transition: transform .35s var(--ease-pop), box-shadow .35s ease, border-color .35s ease;
   text-align: left;
 }
-.photo-card:nth-child(2n){ --tilt: 2deg; }
-.photo-card:nth-child(3n){ --tilt: -1deg; }
 .photo-card:hover{
-  transform: rotate(0deg) translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0,0,0,.45);
+  transform: translateY(-8px);
+  box-shadow: 0 22px 46px rgba(0,0,0,.45);
+  border-color: rgba(244,183,64,.4);
 }
 .photo-card img{
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: 2px;
+  border-radius: 0;
+  transition: transform .6s ease;
 }
+.photo-card:hover img{ transform: scale(1.07); }
 .photo-card figcaption{
-  margin-top: .7rem;
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  margin-top: 0;
+  padding: 2rem .9rem .85rem;
+  background: linear-gradient(180deg, transparent, rgba(9,6,22,.82) 65%);
   font-family: var(--font-display);
-  color: #2c2140;
-  font-size: .95rem;
-  text-align: center;
+  color: var(--cream);
+  font-size: .92rem;
+  text-align: left;
 }
 
 /* =========================================================
@@ -583,13 +712,27 @@ body.stage-active{ overflow: hidden; height: 100vh; }
   padding: 2rem 1.5rem 6rem !important;
 }
 .wish-card{
-  background: linear-gradient(160deg, var(--card), var(--card-2));
-  border: 1px solid rgba(244,183,64,.25);
+  position: relative;
+  background: linear-gradient(160deg, rgba(36,26,87,.82), rgba(43,31,99,.82));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(244,183,64,.3);
   border-radius: var(--radius-lg);
   padding: 3rem 2.4rem;
   text-align: center;
   box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  overflow: hidden;
 }
+.wish-card::before{
+  content: "";
+  position: absolute;
+  inset: -60%;
+  background: conic-gradient(from 0deg, var(--gold), var(--coral), var(--mint), var(--gold));
+  opacity: .16;
+  animation: wish-glow-spin 12s linear infinite;
+}
+.wish-card > *{ position: relative; z-index: 1; }
+@keyframes wish-glow-spin{ to{ transform: rotate(360deg); } }
 .wish-card-icon{ font-size: 2.4rem; display: block; margin-bottom: 1.2rem; }
 .wish-text{
   font-size: 1.15rem;
@@ -621,15 +764,19 @@ body.stage-active{ overflow: hidden; height: 100vh; }
   .message-list{ grid-template-columns: 1fr; }
 }
 .message-item{
-  background: var(--card);
+  background: linear-gradient(160deg, rgba(251,243,230,.08), rgba(251,243,230,.02));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(251,243,230,.12);
   border-radius: var(--radius-md);
   padding: 1.3rem 1.4rem;
   border-left: 3px solid var(--mint);
-  animation: wish-in .4s ease;
+  box-shadow: 0 12px 28px rgba(0,0,0,.22);
+  transition: transform .3s ease, box-shadow .3s ease;
 }
-@keyframes wish-in{
-  from{ opacity: 0; transform: translateY(8px); }
-  to{ opacity: 1; transform: translateY(0); }
+.message-item:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 18px 36px rgba(0,0,0,.3);
 }
 .message-item:nth-child(3n+2){ border-left-color: var(--coral); }
 .message-item:nth-child(3n){ border-left-color: var(--gold); }
@@ -773,5 +920,15 @@ footer{
   .bulb-glow, .bulb-core{ animation: none; opacity: 1; }
   #bike-layer.bike-riding{ animation-duration: .01ms !important; }
   #bike-layer.bike-riding .bike-wheel,
-  #bike-layer.bike-riding .bike-speedlines line{ animation: none; }
+  #bike-layer.bike-riding .bike-speedlines line,
+  #bike-layer.bike-riding .bike-trail path{ animation: none; }
+  .hero-aurora span{ animation: none; }
+  .hero-title .highlight{ animation: none; background-position: 0% 50%; }
+  .wish-card::before{ animation: none; }
+  .scroll-indicator-dot{ animation: none; opacity: 1; }
+  .reveal-up{
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
