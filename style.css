@@ -662,7 +662,7 @@ body.stage-active{ overflow: hidden; height: 100vh; }
   font-family: var(--font-display);
   color: var(--cream);
   font-size: .92rem;
-  text-align: left;
+  text-align: center;
 }
 
 /* =========================================================
