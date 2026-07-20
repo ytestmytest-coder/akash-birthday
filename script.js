@@ -607,40 +607,103 @@
   var revealed = false;
 
   function buildCake(){
-    var startX = 110, endX = 310;
-    var step = (endX - startX) / (CANDLE_COUNT - 1);
+    var startX = 138, endX = 282;
+    var step = CANDLE_COUNT > 1 ? (endX - startX) / (CANDLE_COUNT - 1) : 0;
     var candleGroups = "";
     for (var i = 0; i < CANDLE_COUNT; i++){
       var cx = startX + step * i;
       candleGroups +=
         '<g class="candle" data-index="' + i + '" tabindex="0" role="button" ' +
            'aria-label="Light candle ' + (i + 1) + '">' +
-          '<rect x="' + (cx - 5) + '" y="72" width="10" height="46" rx="2" fill="#FBF3E6"/>' +
-          '<rect x="' + (cx - 5) + '" y="72" width="10" height="46" rx="2" fill="url(#candleStripe)" opacity="0.5"/>' +
-          '<line x1="' + cx + '" y1="66" x2="' + cx + '" y2="72" stroke="#3a2a1a" stroke-width="2"/>' +
+          '<ellipse cx="' + cx + '" cy="90" rx="7" ry="2.4" fill="rgba(0,0,0,.18)"/>' +
+          '<rect x="' + (cx - 4) + '" y="52" width="8" height="38" rx="3" fill="url(#candleStripe' + (i % 3) + ')"/>' +
+          '<rect x="' + (cx - 4) + '" y="52" width="8" height="38" rx="3" fill="url(#candleSheen)"/>' +
+          '<path d="M' + (cx - 5) + ' 53 q5 -6 10 0 q-2 4 -5 3 q-3 1 -5 -3 Z" fill="#FBF3E6"/>' +
+          '<line x1="' + cx + '" y1="45" x2="' + cx + '" y2="52" stroke="#4a3420" stroke-width="1.6" stroke-linecap="round"/>' +
           '<g class="flame">' +
-            '<ellipse cx="' + cx + '" cy="56" rx="8" ry="15" fill="#F4B740"/>' +
-            '<ellipse cx="' + cx + '" cy="60" rx="4.5" ry="8" fill="#FF6F91"/>' +
+            '<ellipse cx="' + cx + '" cy="38" rx="15" ry="17" fill="url(#flameGlow)"/>' +
+            '<ellipse cx="' + cx + '" cy="35" rx="6.5" ry="13" fill="url(#flameOuter)"/>' +
+            '<ellipse cx="' + cx + '" cy="39" rx="3.6" ry="7.5" fill="url(#flameInner)"/>' +
+            '<ellipse cx="' + cx + '" cy="41" rx="1.6" ry="3.4" fill="#3B4E9E" opacity=".85"/>' +
           '</g>' +
-          '<rect x="' + (cx - 16) + '" y="55" width="32" height="65" fill="transparent"/>' + // easier hit target
+          '<rect x="' + (cx - 17) + '" y="18" width="34" height="80" fill="transparent"/>' + // easier hit target
         '</g>';
     }
 
     var svg =
-      '<svg viewBox="0 0 420 250" width="100%" style="max-width:480px" xmlns="http://www.w3.org/2000/svg">' +
+      '<svg viewBox="0 -36 420 296" width="100%" style="max-width:480px" xmlns="http://www.w3.org/2000/svg">' +
         '<defs>' +
-          '<linearGradient id="candleStripe" x1="0" y1="0" x2="1" y2="0">' +
-            '<stop offset="0" stop-color="#FF6F91"/><stop offset="1" stop-color="#4ECDC4"/>' +
+          '<radialGradient id="plateGrad" cx="50%" cy="35%" r="65%">' +
+            '<stop offset="0" stop-color="#3a2e6e"/><stop offset="1" stop-color="#1c1444"/>' +
+          '</radialGradient>' +
+          '<linearGradient id="bottomTierGrad" x1="0" y1="0" x2="1" y2="0">' +
+            '<stop offset="0" stop-color="#FF9AB4"/><stop offset=".55" stop-color="#FF6F91"/><stop offset="1" stop-color="#D8446B"/>' +
+          '</linearGradient>' +
+          '<linearGradient id="bottomTierTopGrad" x1="0" y1="0" x2="1" y2="0">' +
+            '<stop offset="0" stop-color="#FFE3EB"/><stop offset="1" stop-color="#FFC1D2"/>' +
+          '</linearGradient>' +
+          '<linearGradient id="bottomFrostGrad" x1="0" y1="0" x2="0" y2="1">' +
+            '<stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FBF3E6"/>' +
+          '</linearGradient>' +
+          '<linearGradient id="topTierGrad" x1="0" y1="0" x2="1" y2="0">' +
+            '<stop offset="0" stop-color="#FFD97A"/><stop offset=".55" stop-color="#F4B740"/><stop offset="1" stop-color="#D4941F"/>' +
+          '</linearGradient>' +
+          '<linearGradient id="topTierTopGrad" x1="0" y1="0" x2="1" y2="0">' +
+            '<stop offset="0" stop-color="#FFF3D6"/><stop offset="1" stop-color="#FFE2A0"/>' +
+          '</linearGradient>' +
+          '<linearGradient id="topFrostGrad" x1="0" y1="0" x2="0" y2="1">' +
+            '<stop offset="0" stop-color="#FFFDF6"/><stop offset="1" stop-color="#FFF3D6"/>' +
+          '</linearGradient>' +
+          '<linearGradient id="candleStripe0" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FF6F91"/><stop offset="1" stop-color="#FBF3E6"/></linearGradient>' +
+          '<linearGradient id="candleStripe1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4ECDC4"/><stop offset="1" stop-color="#FBF3E6"/></linearGradient>' +
+          '<linearGradient id="candleStripe2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F4B740"/><stop offset="1" stop-color="#FBF3E6"/></linearGradient>' +
+          '<linearGradient id="candleSheen" x1="0" y1="0" x2="1" y2="0">' +
+            '<stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".4" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity=".12"/>' +
+          '</linearGradient>' +
+          '<radialGradient id="flameGlow" cx="50%" cy="55%" r="55%">' +
+            '<stop offset="0" stop-color="#FFD98A" stop-opacity=".55"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/>' +
+          '</radialGradient>' +
+          '<linearGradient id="flameOuter" x1="0" y1="1" x2="0" y2="0">' +
+            '<stop offset="0" stop-color="#FF6F3D"/><stop offset=".55" stop-color="#FFB13D"/><stop offset="1" stop-color="#FFE9A0"/>' +
+          '</linearGradient>' +
+          '<linearGradient id="flameInner" x1="0" y1="1" x2="0" y2="0">' +
+            '<stop offset="0" stop-color="#FFC24D"/><stop offset="1" stop-color="#FFF6D8"/>' +
           '</linearGradient>' +
         '</defs>' +
-        '<ellipse cx="210" cy="228" rx="170" ry="14" fill="rgba(0,0,0,.35)"/>' +
-        '<rect x="70" y="150" width="280" height="70" rx="18" fill="#FBF3E6"/>' +
-        '<path d="M70 168 q17 -14 34 0 q17 14 34 0 q17 -14 34 0 q17 14 34 0 q17 -14 34 0 q17 14 34 0 q17 -14 34 0 V220 H70 Z" fill="#FF6F91"/>' +
-        '<rect x="100" y="118" width="220" height="42" rx="14" fill="#FBF3E6"/>' +
-        '<path d="M100 130 q13 -12 26 0 q13 12 26 0 q13 -12 26 0 q13 12 26 0 q13 -12 26 0 q13 12 26 0 q13 -12 26 0 V160 H100 Z" fill="#F4B740"/>' +
-        '<circle cx="120" cy="190" r="4" fill="#4ECDC4"/><circle cx="160" cy="200" r="4" fill="#FF6F91"/>' +
-        '<circle cx="220" cy="192" r="4" fill="#F4B740"/><circle cx="280" cy="200" r="4" fill="#4ECDC4"/>' +
-        '<circle cx="310" cy="188" r="4" fill="#FF6F91"/>' +
+
+        '<ellipse cx="210" cy="230" rx="176" ry="16" fill="rgba(0,0,0,.4)"/>' +
+        '<ellipse cx="210" cy="222" rx="172" ry="15" fill="url(#plateGrad)"/>' +
+        '<ellipse cx="210" cy="218" rx="172" ry="15" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>' +
+
+        // bottom tier body + top cap for cylindrical volume
+        '<rect x="66" y="140" width="288" height="76" fill="url(#bottomTierGrad)"/>' +
+        '<path d="M66 140 a144 15 0 0 0 288 0 Z" fill="url(#bottomTierTopGrad)"/>' +
+        '<path d="M66 216 a144 15 0 0 0 288 0" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="3"/>' +
+        // bottom tier frosting drip
+        '<path d="M66 140 q12 22 24 0 q12 22 24 0 q12 22 24 0 q12 22 24 0 q12 22 24 0 q12 22 24 0 q12 22 24 0 q12 22 24 0 q12 22 24 0 q12 22 24 0 q12 22 24 0 q12 22 24 0 L354 140 a144 15 0 0 1 -288 0 Z" fill="url(#bottomFrostGrad)"/>' +
+
+        // top tier body + cap
+        '<rect x="112" y="88" width="196" height="56" fill="url(#topTierGrad)"/>' +
+        '<path d="M112 88 a98 12 0 0 0 196 0 Z" fill="url(#topTierTopGrad)"/>' +
+        '<path d="M112 144 a98 12 0 0 0 196 0" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="3"/>' +
+        // top tier frosting drip
+        '<path d="M112 88 q10 18 20 0 q10 18 20 0 q10 18 20 0 q10 18 20 0 q10 18 20 0 q10 18 20 0 q10 18 20 0 q10 18 20 0 q10 18 20 0 L308 88 a98 12 0 0 1 -196 0 Z" fill="url(#topFrostGrad)"/>' +
+
+        // sprinkles across both tiers
+        '<g>' +
+          '<rect x="96" y="176" width="8" height="3" rx="1.5" fill="#4ECDC4" transform="rotate(20 100 177)"/>' +
+          '<rect x="130" y="192" width="8" height="3" rx="1.5" fill="#F4B740" transform="rotate(-15 134 193)"/>' +
+          '<rect x="168" y="180" width="8" height="3" rx="1.5" fill="#FBF3E6" transform="rotate(35 172 181)"/>' +
+          '<rect x="210" y="196" width="8" height="3" rx="1.5" fill="#4ECDC4" transform="rotate(-25 214 197)"/>' +
+          '<rect x="248" y="182" width="8" height="3" rx="1.5" fill="#F4B740" transform="rotate(15 252 183)"/>' +
+          '<rect x="286" y="194" width="8" height="3" rx="1.5" fill="#FBF3E6" transform="rotate(-30 290 195)"/>' +
+          '<rect x="318" y="178" width="8" height="3" rx="1.5" fill="#4ECDC4" transform="rotate(25 322 179)"/>' +
+          '<circle cx="150" cy="112" r="2.6" fill="#FF6F91"/>' +
+          '<circle cx="188" cy="120" r="2.6" fill="#4ECDC4"/>' +
+          '<circle cx="232" cy="114" r="2.6" fill="#FBF3E6"/>' +
+          '<circle cx="270" cy="122" r="2.6" fill="#FF6F91"/>' +
+        '</g>' +
+
         candleGroups +
       '</svg>';
 
